@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router';
 
 const Navbar = () => {
     return (
@@ -6,11 +7,11 @@ const Navbar = () => {
 
             {/* Left - Logo */}
             <div className="navbar-start">
-                <a className="btn btn-ghost text-xl">NextShop</a>
+                <Link to="/"><a className="btn btn-ghost text-orange-400 text-xl">NextShop</a></Link>
             </div>
 
             {/* Center - Search */}
-            <div className=" w-1/2 mr-1 sm:flex">
+            <div className=" w-1/2 mr-1 ">
                 <form
                     onSubmit={(e) => e.preventDefault()}
                     className="w-full">
@@ -40,8 +41,12 @@ const Navbar = () => {
 
             {/* Right - Buttons */}
             <div className="navbar-end gap-2">
-                <button className="btn btn-primary btn-sm">Login</button>
-                <button className="btn btn-success btn-sm">Register</button>
+                <Link to="/login" className="btn btn-primary btn-sm">
+                    Login
+                </Link>
+                <Link to="/register" className="btn btn-success btn-sm">
+                    Register
+                </Link>
             </div>
 
         </div>
