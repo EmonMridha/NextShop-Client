@@ -1,6 +1,14 @@
 import React from 'react';
+import { useForm } from 'react-hook-form';
+import { Link } from 'react-router';
 
 const Register = () => {
+
+    const { register, handleSubmit, formState: { errors } } = useForm();
+
+    const onSubmit = formData => {
+        console.log(formData);
+    }
     return (
         <main className="w-full h-screen flex flex-col items-center justify-center bg-amber-50 px-4">
             <div className="max-w-sm w-full text-gray-600 space-y-5">
@@ -10,19 +18,17 @@ const Register = () => {
                         <h3 className="text-gray-800 text-2xl font-bold sm:text-3xl">Create a new account</h3>
                     </div>
                 </div>
-                <form
-                    onSubmit={(e) => e.preventDefault()}
-                    className="space-y-5"
-                >
+                <form onSubmit={handleSubmit(onSubmit)}>
                     <div>
                         <label className="font-medium">
                             Email
                         </label>
                         <input
                             type="email"
-                            required
+                            {...register('email', { required: true })}
                             className="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
                         />
+                        {errors.email && <p className="text-red-500 text-sm mt-1">Email is required</p>}
                     </div>
                     <div>
                         <label className="font-medium">
@@ -30,9 +36,10 @@ const Register = () => {
                         </label>
                         <input
                             type="password"
-                            required
+                            {...register('password', { required: true })}
                             className="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
                         />
+                        {errors.password && <p className="text-red-500 text-sm mt-1">Password is required</p>}
                     </div>
                     <div className="flex items-center justify-between text-sm">
                         <div className="flex items-center gap-x-3">
@@ -44,12 +51,11 @@ const Register = () => {
                             </label>
                             <span>Remember me</span>
                         </div>
-                        <a href="javascript:void(0)" className="text-center text-indigo-600 hover:text-indigo-500">Forgot password?</a>
                     </div>
                     <button
                         className="w-full px-4 py-2 text-white font-medium bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-600 rounded-lg duration-150"
                     >
-                        Sign in
+                        Sign up
                     </button>
                 </form>
                 <button className="w-full flex items-center justify-center gap-x-3 py-2.5 border rounded-lg text-sm font-medium hover:bg-gray-50 duration-150 active:bg-gray-100">
@@ -68,7 +74,7 @@ const Register = () => {
                     </svg>
                     Continue with Google
                 </button>
-                <p className="text-center">Don't have an account? <a href="javascript:void(0)" className="font-medium text-indigo-600 hover:text-indigo-500">Sign up</a></p>
+                <Link to="/login" className="text-center">Already Have an account? <a href="javascript:void(0)" className="font-medium text-indigo-600 hover:text-indigo-500">Sign In</a></Link>
             </div>
         </main>
     );
