@@ -1,13 +1,45 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
+import useAuth from '../../Hooks/useAuth';
+import { updateProfile } from 'firebase/auth';
+import { auth } from '../../firebase/firebase.init';
+import Swal from 'sweetalert2';
 
 const Register = () => {
 
     const { register, handleSubmit, formState: { errors } } = useForm();
+    const { createUser, createUserWithGoogle } = useAuth();
+    const navigate = useNavigate(); // for navigating to another page after successful registration
 
     const onSubmit = formData => {
-        console.log(formData);
+        createUser(formData.email, formData.password)
+            .then(result => {
+                const user = result.user;
+                updateProfile(user, {
+                    displayName: formData.name,
+                    photoURL: formData.photoURL
+                })
+                Swal.fire('Registered Successfully', '', 'success');
+                navigate('/'); // navigate to home page after successful registration
+            })
+            .catch(error => {
+                console.log(error);
+                Swal.fire('Registration Failed', error.message, 'error');
+            })
+    }
+
+    const googleSignIn = () => {
+        createUserWithGoogle()
+            .then(result => {
+
+                Swal.fire('Signed In Successfully', '', 'success');
+                navigate('/'); // navigate to home page after successful sign-in
+            })
+            .catch(error => {
+                console.log(error);
+                Swal.fire('Google Sign-In Failed', error.message, 'error');
+            })
     }
     return (
         <main className="w-full h-screen flex flex-col items-center justify-center bg-amber-50 px-4">
@@ -19,6 +51,28 @@ const Register = () => {
                     </div>
                 </div>
                 <form onSubmit={handleSubmit(onSubmit)}>
+                    <div>
+                        <label className="font-medium">
+                            Name
+                        </label>
+                        <input
+                            type="text"
+                            {...register('name', { required: true })}
+                            className="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
+                        />
+                        {errors.name && <p className="text-red-500 text-sm mt-1">Name is required</p>}
+                    </div>
+                    <div>
+                        <label className="font-medium">
+                            Photo URL
+                        </label>
+                        <input
+                            type="text"
+                            {...register('photoURL', { required: true })}
+                            className="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
+                        />
+                        {errors.photoURL && <p className="text-red-500 text-sm mt-1">Photo URL is required</p>}
+                    </div>
                     <div>
                         <label className="font-medium">
                             Email
@@ -58,7 +112,7 @@ const Register = () => {
                         Sign up
                     </button>
                 </form>
-                <button className="w-full flex items-center justify-center gap-x-3 py-2.5 border rounded-lg text-sm font-medium hover:bg-gray-50 duration-150 active:bg-gray-100">
+                <button onClick={googleSignIn} className="w-full flex items-center justify-center gap-x-3 py-2.5 border rounded-lg text-sm font-medium hover:bg-gray-50 duration-150 active:bg-gray-100">
                     <svg className="w-5 h-5" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <g clip-path="url(#clip0_17_40)">
                             <path d="M47.532 24.5528C47.532 22.9214 47.3997 21.2811 47.1175 19.6761H24.48V28.9181H37.4434C36.9055 31.8988 35.177 34.5356 32.6461 36.2111V42.2078H40.3801C44.9217 38.0278 47.532 31.8547 47.532 24.5528Z" fill="#4285F4" />
