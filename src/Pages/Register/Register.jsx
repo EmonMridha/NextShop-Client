@@ -31,10 +31,11 @@ const Register = () => {
 
                 axiosSecure.put('/users', userData)
                     .then((response) => {
-                        console.log(response.data);
                         if (response.data.upsertedId) {
-
-                            Swal.fire('Registration Successful', '', 'success');
+                            Swal.fire('Registration Successful and User Data Saved', '', 'success');
+                            navigate('/'); // navigate to home page after successful registration
+                        } else {
+                            Swal.fire('Registration Successful but User Data Already Exists', '', 'info');
                             navigate('/'); // navigate to home page after successful registration
                         }
                     })
@@ -62,7 +63,7 @@ const Register = () => {
                         console.log(response.data);
                         if (response.data.upsertedId) {
                             Swal.fire('Google Sign-In Successful and User Data Saved', '', 'success');
-                                navigate('/'); // navigate to home page after successful sign-in
+                            navigate('/'); // navigate to home page after successful sign-in
                         }
                         else {
                             Swal.fire('Google Sign-In Successful but User Data Already Exists', '', 'success');
